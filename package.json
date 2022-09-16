@@ -1,0 +1,27 @@
+{
+  "name": "ipf_fund_request_system",
+  "version": "1.0.0",
+  "description": "a system for requesting funds from finance manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "dependencies": {
+    "@bugsnag/js": "^7.17.0",
+    "@bugsnag/plugin-express": "^7.17.0",
+    "codemirror": "^6.0.1",
+    "express": "^4.18.1",
+    "formidable": "^2.0.1",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.9.0",
+    "mongoose": "^6.5.4",
+    "socket.io": "^4.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:AmaniShayo/fund_system.git"
+  },
+  "author": "shedrack",
+  "license": "ISC"
+}
