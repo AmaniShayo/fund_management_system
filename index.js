@@ -1,27 +1,37 @@
+require('dotenv').config();
 const express=require('express');
 const Bugsnag = require('@bugsnag/js');
 const BugsnagPluginExpress = require('@bugsnag/plugin-express');
 const mongoose = require('mongoose');
+const {authenticate} = require('./authenication/authenicate');
+const { signUser } = require('./authenication/signUser');
 const { Admin} = require('./database/queries/admin');
-Bugsnag.start({
-    apiKey: '467947fb47a4c0f2bca2aeea86dc0793',
-    plugins: [BugsnagPluginExpress]
-  });
+// Bugsnag.start({
+//     apiKey: '467947fb47a4c0f2bca2aeea86dc0793',
+//     plugins: [BugsnagPluginExpress]
+//   });
 const app = express();
-let bagsnagMiddleware = Bugsnag.getPlugin('express');
+// let bagsnagMiddleware = Bugsnag.getPlugin('express');
 app.use(express.json());
-app.use(bagsnagMiddleware.requestHandler);
-app.use(bagsnagMiddleware.errorHandler);
+// app.use(bagsnagMiddleware.requestHandler);
+// app.use(bagsnagMiddleware.errorHandler);
 
 
 
 app.get('/',(req,res)=>{
     res.end('welcome api services');
-    res.end()
-    
 })
 
-app.post('/api/admin/add-user', async(req,res)=>{
+app.post('/api/login', async(req,res)=>{
+    let status=await signUser(req.body.email,req.body.password,process.env.ACCESS_TOKEN);
+    if (status=='passwordNotChanged') {
+        res.redirect('/api/change-password');
+    } else {
+        res.json(status);
+    }
+})
+
+app.post('/api/admin/add-user',authenticate, async(req,res)=>{
     await mongoose.connect('mongodb://localhost:27017/test-collection');
     let result = await Admin.createNewUser(req.body.data)
     res.json(result);

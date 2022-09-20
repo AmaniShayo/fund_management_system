@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         minLength:[4,"password should have atleast four characters"]
     },
+    passwordChanged:{
+        type:Boolean,
+        default:false
+    },
     department:String,
     role:{
         type:String,

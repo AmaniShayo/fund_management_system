@@ -1,9 +1,11 @@
 const { user } = require('../schemas');
+const { sendEmail } = require('../../mailer');
 let Admin = {
     createNewUser: async (userDetails) => {
         try {
             let newUser = new user(userDetails);
             await newUser.save();
+            sendEmail("admin",newUser.emailAddress,"login credentials",`use your email address and the password:${newUser.password} to login and change your password`);
             return newUser;
         } catch (error) {
             return error;
@@ -12,20 +14,14 @@ let Admin = {
     },
     removeUser: async (userId) => {
         try {
-            await user.findOneAndDelete({ _id: userId });
+            return await user.findOneAndDelete({ _id: userId });
         } catch (error) {
             return error
         }
     },
     changeUserRole: async (userId,newRole) => {
         try {
-            if (newRole == 'admin') {
-                return await user.findByIdAndUpdate(userId,{role:"admin"});
-            } else if (newRole == 'finaceManager') {
-                return await user.findByIdAndUpdate(userId,{role:"financeMane"});
-            } else {
-                return await user.findByIdAndUpdate(userId,{role:"stuff"});
-            }
+            return await user.findByIdAndUpdate(userId,{role:`${newRole}`});
         } catch (error) {
             return error;
         }
