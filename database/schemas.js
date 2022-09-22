@@ -1,3 +1,4 @@
+const { string } = require('joi');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -25,7 +26,6 @@ const userSchema = new mongoose.Schema({
         unique:[true,"That email address is taken"]
     },
     password:{
-        default:"ipf-software",
         type:String,
         minLength:[4,"password should have atleast four characters"]
     },
@@ -58,13 +58,17 @@ const fundRequestSchema = new mongoose.Schema({
         type:Number,
         required:[true,"amount is required"]
     },
-    reason:{
+    description:{
         type:String,
         required:[true,"reason is requred"]
     },
     status:{
         type:String,
         default:"pending"
+    },
+    settled:{
+        type:Boolean,
+        default:false
     }
 
 });
@@ -177,6 +181,19 @@ const expenditureSchema = new mongoose.Schema({
     }
 });
 
+const otpSchema= new mongoose.Schema({
+    value:{
+        type:String,
+        required:true
+    },
+    email:String,
+    phoneNumber:Number,
+    expireDate:{
+        type:Date
+    }
+})
+
+let otp=mongoose.model('otp',otpSchema);
 let departments = mongoose.model('departments',departmentSchema);
 let project = mongoose.model('projects',projectSchema);
 let departmentBadget = mongoose.model('departmentBadget',departmentBadgetSchema);
@@ -186,4 +203,4 @@ let expenditure = mongoose.model('expenditures',expenditureSchema);
 let badget = mongoose.model('badget',badgetSchema);
 let user = mongoose.model('users',userSchema);
 let request=mongoose.model('fundRequests',fundRequestSchema);
-module.exports={departments,user,request,badget,expenditure,exepmption,receipt,departmentBadget,project};
+module.exports={departments,user,request,badget,expenditure,exepmption,receipt,departmentBadget,project,otp};
