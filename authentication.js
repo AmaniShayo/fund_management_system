@@ -5,7 +5,7 @@ const authenticate=(req,res,next)=>{
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) {
-        res.status(401).json({message:"please provide access token"}).end();
+        res.status(403).json({message:"please provide access token"}).end();
         return;
     } else {
      jwt.verify(token,process.env.ACCESS_TOKEN,(err,userDetail)=>{

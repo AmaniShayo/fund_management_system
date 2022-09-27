@@ -1,9 +1,9 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const sendEmail = (from_, to_, subject_, message) => {
+const sendEmail = async (from_, to_, subject_, message) => {
     try {
 
-        const client = nodemailer.createTransport({
+        const client = await nodemailer.createTransport({
             service: "Gmail",
             auth: {
                 user: "thebraingrouptz@gmail.com",
@@ -11,7 +11,7 @@ const sendEmail = (from_, to_, subject_, message) => {
             }
         });
 
-        client.sendMail(
+        await client.sendMail(
             {
                 from: from_,
                 to: to_,

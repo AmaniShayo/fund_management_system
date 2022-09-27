@@ -1,0 +1,25 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "fund request system API",
+      "description": "a system for requesting funds from finance manager",
+      "contact": {
+        "name": "fund request api dev"
+      }
+    },
+    "host": "localhost",
+    "basePath": "/api-documentation",
+    "schemes": [
+      "http"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "paths": {
+
+    }
+}

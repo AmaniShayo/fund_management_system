@@ -7,7 +7,12 @@ async function encript(password){
 }
 
 async function compare(password,hashedPassword){
-    return await bcrypt.compare(password,hashedPassword);
+    try {
+        let result = await bcrypt.compare(password,hashedPassword);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 function randomPassword(){
@@ -19,7 +24,7 @@ function randomPassword(){
     }
     return password.join('');
 }
-
+randomPassword()
 function otpGenarator(){
     let date = new Date();
     let expireDate = date.setMinutes(date.getMinutes()+10)

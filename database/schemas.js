@@ -1,4 +1,3 @@
-const { string } = require('joi');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -186,12 +185,14 @@ const otpSchema= new mongoose.Schema({
         type:String,
         required:true
     },
-    email:String,
-    phoneNumber:Number,
+    email:{
+        type:String,
+        required:true
+    },
     expireDate:{
         type:Date
     }
-})
+});
 
 let otp=mongoose.model('otp',otpSchema);
 let departments = mongoose.model('departments',departmentSchema);

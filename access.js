@@ -1,29 +1,21 @@
-let access ={
-    staffAccess:(req,res,next)=>{
-        if (req.user.role==='admin' || req.user.role==='stuff') {
-            next();
-            return;
-        }
-        res.status(403).json({message:"unauthorised"}).end();
-        return;
-    },
-    financeManagerAccess:(req,res,next)=>{
+let roles ={
+    allowFinanceManager:(req,res,next)=>{
         if (req.user.role==="admin" || req.user.role==='financeManager') {
             next();
             return;
         }
-        res.status(403).json({message:"unauthorised"}).end();
+        res.status(401).json({message:"unauthorised"}).end();
         return;
     },
-    adminAccess:(req,res,next)=>{
+    allowAdmin:(req,res,next)=>{
         if (req.user.role==="admin") {
             next();
             return;
         }
-        res.status(403).json({message:"unauthorised"}).end();
+        res.status(401).json({message:"unauthorised"}).end();
         return;
     }
 }
 
 
-module.exports={access};
+module.exports={roles};

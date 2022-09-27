@@ -18,7 +18,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.9.0",
     "mongoose": "^6.5.4",
-    "socket.io": "^4.5.1"
+    "socket.io": "^4.5.1",
+    "swagger-ui-express": "^4.5.0"
   },
   "repository": {
     "type": "git",
