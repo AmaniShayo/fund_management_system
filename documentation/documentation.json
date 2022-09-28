@@ -9,7 +9,7 @@
     }
   },
   "host": "localhost",
-  "basePath": "",
+  "basePath": "/api",
   "schemes": [
     "http"
   ],
@@ -20,7 +20,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/login": {
+    "/login": {
       "post": {
         "description": "verify email address and password for login",
         "produces":"application/json",
@@ -45,7 +45,7 @@
         }
       }
     },
-    "/api/forgot-password":{
+    "/forgot-password":{
       "post":{
         "description":"generates one time password for forgoten passwords",
         "produces":"application/json",
@@ -77,7 +77,7 @@
         }
       }
     },
-    "/api/generate-otp":{
+    "/generate-otp":{
       "get":{
         "description":"generates one time password for forgoten passwords",
         "produces":"application/json",
@@ -99,7 +99,7 @@
         }
       }
     },
-    "/api/change-password":{
+    "/change-password":{
       "post":{
         "description":"generates one time password for forgoten passwords",
         "produces":"application/json",
@@ -131,7 +131,7 @@
         }
       }
     },
-    "/api/admin/add-user":{
+    "/admin/add-user":{
       "post":{
         "description":"generates one time password for forgoten passwords",
         "produces":"application/json",

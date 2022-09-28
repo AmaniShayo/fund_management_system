@@ -1,4 +1,4 @@
-const {departments,user,request,badget,expenditure,exepmption,receipt,departmentBadget,project,otp} = require('./schemas')
+const {categories,user,request,badget,expenditure,exepmption,receipt,itemsBadget,otp} = require('./schemas')
 const { inviteByEmail,otpEmail } = require('../mailer');
 const { randomPassword,encript,otpGenarator} = require('../passwords');
 const { compare, hash } = require('bcryptjs');
@@ -36,7 +36,7 @@ const queries ={
         try {
             let result =await user.findOneAndDelete({ emailAddress: req.body.email });
             if (!result) {
-                res.status(404).json({meaasage:"user with given id was not found"}).end();
+                res.status(404).json({meaasage:"user with given email was not found"}).end();
                 return;
             }
             res.json(result).end();

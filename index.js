@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express=require('express');
+const {logger} = require("./logger");
 const Bugsnag = require('@bugsnag/js');
 const BugsnagPluginExpress = require('@bugsnag/plugin-express');
 const mongoose = require('mongoose');
@@ -9,20 +10,21 @@ const { authenticate } = require('./authentication');
 const { signUser } = require('./signUser');
 const { queries } = require('./database/queries');
 const { roles } = require('./access');
-Bugsnag.start({
-    apiKey: '467947fb47a4c0f2bca2aeea86dc0793',
-    plugins: [BugsnagPluginExpress]
-  });
+// Bugsnag.start({
+//     apiKey: '467947fb47a4c0f2bca2aeea86dc0793',
+//     plugins: [BugsnagPluginExpress]
+//   });
 
 const app = express();
 
-let bagsnagMiddleware = Bugsnag.getPlugin('express');
+// let bagsnagMiddleware = Bugsnag.getPlugin('express');
 
 app.use(express.json());
 
-app.use(bagsnagMiddleware.requestHandler);
 
-app.use(bagsnagMiddleware.errorHandler);
+// app.use(bagsnagMiddleware.requestHandler);
+
+// app.use(bagsnagMiddleware.errorHandler);
 
 app.use(async(req,res,next)=>{
 
@@ -35,7 +37,7 @@ app.use(async(req,res,next)=>{
 })
 app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(Documentation));
 app.get('/',(req,res)=>{
-    res.json({message:"welcome to our api services"})
+    res.json({message:"welcome to our api services"});
 });
 
 app.post('/api/login', signUser);
@@ -46,7 +48,8 @@ app.post('/api/forgot-password',queries.forgotPassword);
 
 app.post('/api/change-password',queries.changePassword);
 
-// app.use(authenticate);
+app.use(authenticate);
+app.use(logger);
 app.use('/api/admin',roles.allowAdmin);
 app.use('/api/finance-manager',roles.allowFinanceManager);
 

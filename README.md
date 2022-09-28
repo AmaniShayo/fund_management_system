@@ -1,6 +1,6 @@
 # fund_system
 
-##Description
+## Description
 
 The system allows stuff members to request funds from finance manager using API
 
