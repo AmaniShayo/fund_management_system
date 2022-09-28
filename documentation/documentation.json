@@ -45,6 +45,38 @@
         }
       }
     },
+    "/api/forgot-password":{
+      "post":{
+        "description":"generates one time password for forgoten passwords",
+        "produces":"application/json",
+        "consumes":"application/json",
+        "parameters":[
+          {
+            "name":"email",
+            "required":"true",
+            "in": "body"
+          },
+          {
+            "name":"otp",
+            "required":"true",
+            "in":"body"
+          },
+          {
+            "name":"newPassword",
+            "required":"true",
+            "in":"body"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"success message"
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      }
+    },
     "/api/generate-otp":{
       "get":{
         "description":"generates one time password for forgoten passwords",
@@ -55,6 +87,91 @@
             "name":"email",
             "required":"true",
             "in": "body"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"success message"
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      }
+    },
+    "/api/change-password":{
+      "post":{
+        "description":"generates one time password for forgoten passwords",
+        "produces":"application/json",
+        "consumes":"application/json",
+        "parameters":[
+          {
+            "name":"email",
+            "required":"true",
+            "in": "body"
+          },
+          {
+            "name":"oldPassword",
+            "required":"true",
+            "in":"body"
+          },
+          {
+            "name":"newPassword",
+            "required":"true",
+            "in":"body"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"success message"
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      }
+    },
+    "/api/admin/add-user":{
+      "post":{
+        "description":"generates one time password for forgoten passwords",
+        "produces":"application/json",
+        "consumes":"application/json",
+        "parameters":[
+          {
+            "name":"Authorization",
+            "required":"true",
+            "in":"header"
+          },
+          {
+            "name":"firstName",
+            "required":"true",
+            "in": "body"
+          },
+          {
+            "name":"secondName",
+            "required":"true",
+            "in":"body"
+          },
+          {
+            "name":"lastName",
+            "required":"true",
+            "in":"body"
+          },
+          {
+            "name":"email",
+            "required":"true",
+            "in":"body"
+          },
+          {
+            "name":"phoneNumber",
+            "required":"true",
+            "in":"body",
+            "type":"integer"
+          },
+          {
+            "name":"role",
+            "required":"true",
+            "in":"body"
           }
         ],
         "responses":{
