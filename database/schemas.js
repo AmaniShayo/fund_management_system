@@ -113,7 +113,6 @@ const exemptionSchema = new mongoose.Schema({
 const badgetSchema = new mongoose.Schema({
     month:{
         type:String,
-        default:()=>{let date = new Date; return date.getMonth},
         immutable:true
     },
     badgetAmount:{
@@ -129,17 +128,17 @@ const badgetSchema = new mongoose.Schema({
     }
 });
 
-const departmentSchema= new mongoose.Schema({
+const categoriesSchema= new mongoose.Schema({
     name:{
         type:String,
         required:[true,"deparment name is required"]
     }
 })
 
-const departmentBadgetSchema= new mongoose.Schema({
-    department:{
+const itemsBadgetSchema= new mongoose.Schema({
+    item:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"departments"
+        ref:"categories"
     },
     badgetAmount:{
         type:Number,
@@ -150,17 +149,6 @@ const departmentBadgetSchema= new mongoose.Schema({
     }
 });
 
-const projectSchema = new mongoose.Schema({
-    projectName:{
-        type:String,
-        required:[true,"project name is required"]
-    },
-    department:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"departmentBadget"
-    }
-})
-
 const expenditureSchema = new mongoose.Schema({
     amount:{
         type:mongoose.Schema.Types.ObjectId,
@@ -170,9 +158,8 @@ const expenditureSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"request"
     },
-    date:{
-        type:Date,
-        default:()=> Date.now()
+    month:{
+        type:String,
     },
     project:{
         type:mongoose.Schema.Types.ObjectId,
@@ -195,13 +182,12 @@ const otpSchema= new mongoose.Schema({
 });
 
 let otp=mongoose.model('otp',otpSchema);
-let departments = mongoose.model('departments',departmentSchema);
-let project = mongoose.model('projects',projectSchema);
-let departmentBadget = mongoose.model('departmentBadget',departmentBadgetSchema);
+let categories = mongoose.model('departments',categoriesSchema);
+let itemsBadget = mongoose.model('itemsBadget',itemsBadgetSchema);
 let receipt = mongoose.model('recepts',receiptSchema);
 let exepmption = mongoose.model('exemptions',exemptionSchema);
 let expenditure = mongoose.model('expenditures',expenditureSchema);
 let badget = mongoose.model('badget',badgetSchema);
 let user = mongoose.model('users',userSchema);
 let request=mongoose.model('fundRequests',fundRequestSchema);
-module.exports={departments,user,request,badget,expenditure,exepmption,receipt,departmentBadget,project,otp};
+module.exports={itemsBadget,user,request,badget,expenditure,exepmption,receipt,categories,otp};

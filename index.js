@@ -33,7 +33,7 @@ app.use(async(req,res,next)=>{
         res.status(500).json({message:"internal server error"}).end();
     }
 })
-app.use('/api-documentation', swaggerUi.serve, swaggerUi.setup(Documentation));
+app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(Documentation));
 app.get('/',(req,res)=>{
     res.json({message:"welcome to our api services"})
 });
@@ -46,7 +46,7 @@ app.post('/api/forgot-password',queries.forgotPassword);
 
 app.post('/api/change-password',queries.changePassword);
 
-app.use(authenticate);
+// app.use(authenticate);
 app.use('/api/admin',roles.allowAdmin);
 app.use('/api/finance-manager',roles.allowFinanceManager);
 

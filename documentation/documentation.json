@@ -1,25 +1,71 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "fund request system API",
-      "description": "a system for requesting funds from finance manager",
-      "contact": {
-        "name": "fund request api dev"
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "fund request system API",
+    "description": "a system for requesting funds from finance manager",
+    "contact": {
+      "name": "fund request api dev"
+    }
+  },
+  "host": "localhost",
+  "basePath": "",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/login": {
+      "post": {
+        "description": "verify email address and password for login",
+        "produces":"application/json",
+        "consumes":"application/json",
+        "parameters": [
+            {
+              "name":"email",
+              "required":"true"
+            },
+            {
+              "name":"password",
+              "required":"true"
+            }
+         ],
+        "responses": {
+          "200": {
+            "description": "returns access tokens to be passsed in autorization header in other requests"
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
       }
     },
-    "host": "localhost",
-    "basePath": "/api-documentation",
-    "schemes": [
-      "http"
-    ],
-    "consumes": [
-      "application/json"
-    ],
-    "produces": [
-      "application/json"
-    ],
-    "paths": {
-
+    "/api/generate-otp":{
+      "get":{
+        "description":"generates one time password for forgoten passwords",
+        "produces":"application/json",
+        "consumes":"application/json",
+        "parameters":[
+          {
+            "name":"email",
+            "required":"true",
+            "in": "body"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"message that email is sent to your given email address"
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      }
     }
+  }
 }
