@@ -10,7 +10,7 @@ async function signUser(req,res){
         }
         if (userDetails.passwordChanged) {
             if (await compare(req.body.password,userDetails.password)) {                
-                let token = await jwt.sign({userId:userDetails._id.toHexString(),role:userDetails.role},process.env.ACCESS_TOKEN,{expiresIn:"10h"});
+                let token = await jwt.sign({userId:userDetails._id.toHexString(),role:userDetails.role,email:userDetails.emailAddress},process.env.ACCESS_TOKEN,{expiresIn:"10h"});
                 res.status(200).json({token:token}).end();
                 return;
             }

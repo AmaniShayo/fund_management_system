@@ -32,7 +32,10 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    department:String,
+    department:{
+        type:String,
+        required:true
+    },
     role:{
         type:String,
         default:"stuff"
@@ -46,10 +49,10 @@ const userSchema = new mongoose.Schema({
 
 const fundRequestSchema = new mongoose.Schema({
     userId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"users"
+        type:String,
+        required:true
     },
-    projectName:{
+    project:{
         type:String,
         required:true
     },
@@ -74,8 +77,8 @@ const fundRequestSchema = new mongoose.Schema({
 
 const receiptSchema = new mongoose.Schema({
     requestId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"requests"
+        type:String,
+        required:true
     },
     amount:{
         type:Number,
@@ -93,8 +96,8 @@ const receiptSchema = new mongoose.Schema({
 
 const exemptionSchema = new mongoose.Schema({
     requestId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"requests"
+        type:String,
+        required:true
     },
     amount:{
         type:Number,
@@ -128,17 +131,17 @@ const badgetSchema = new mongoose.Schema({
     }
 });
 
-const categoriesSchema= new mongoose.Schema({
+const projectsSchema= new mongoose.Schema({
     name:{
         type:String,
         required:[true,"deparment name is required"]
     }
-})
+});
 
-const itemsBadgetSchema= new mongoose.Schema({
-    item:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"categories"
+const projectBadgetSchema= new mongoose.Schema({
+    project:{
+        type:String,
+        required:true
     },
     badgetAmount:{
         type:Number,
@@ -151,19 +154,20 @@ const itemsBadgetSchema= new mongoose.Schema({
 
 const expenditureSchema = new mongoose.Schema({
     amount:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"requests"
-    },
-    spentOn:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"request"
-    },
-    month:{
         type:String,
+        required:true
+    },
+    date:{
+        type:Date,
+        default:()=> Date.now()
+    },
+    badget:{
+        type:String,
+        required:true
     },
     project:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"projects"
+        type:String,
+        required:true
     }
 });
 
@@ -181,13 +185,31 @@ const otpSchema= new mongoose.Schema({
     }
 });
 
+const deparmentSchema = new mongoose.Schema({
+    departmentName:{
+        type:String,
+        required:true
+    }
+});
+
+const rejectSchema = new mongoose.Schema({
+    request:{
+        type:String
+    },
+    reason:{
+        type:String,
+        required:[true,"please provide reason for rejection"]
+    }
+});
+let reject = mongoose.model("rejects",rejectSchema)
+let deparment = mongoose.model('department',deparmentSchema);
 let otp=mongoose.model('otp',otpSchema);
-let categories = mongoose.model('departments',categoriesSchema);
-let itemsBadget = mongoose.model('itemsBadget',itemsBadgetSchema);
+let project = mongoose.model('projects',projectsSchema);
+let projectBadget = mongoose.model('projectBadget',projectBadgetSchema);
 let receipt = mongoose.model('recepts',receiptSchema);
 let exepmption = mongoose.model('exemptions',exemptionSchema);
 let expenditure = mongoose.model('expenditures',expenditureSchema);
 let badget = mongoose.model('badget',badgetSchema);
 let user = mongoose.model('users',userSchema);
 let request=mongoose.model('fundRequests',fundRequestSchema);
-module.exports={itemsBadget,user,request,badget,expenditure,exepmption,receipt,categories,otp};
+module.exports={projectBadget,user,request,badget,expenditure,exepmption,receipt,project,otp,reject,deparment};
