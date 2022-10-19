@@ -6,10 +6,10 @@ The system allows stuff members to request funds from finance manager using API
 
 Finance manager can view requests made and either approve or denie requested fund
 
-## Tools
+# Tools
 
 ## node.js
-since javascript is used
+since language used is javaScript
 
 ## mongoDB
 document base database that will be used to store data in objects

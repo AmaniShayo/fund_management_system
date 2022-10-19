@@ -23,21 +23,43 @@
     "/login": {
       "post": {
         "description": "verify email address and password for login",
-        "produces":"application/json",
-        "consumes":"application/json",
+        "produces": "application/json",
+        "consumes": "application/json",
         "parameters": [
-            {
-              "name":"email",
-              "required":"true"
-            },
-            {
-              "name":"password",
-              "required":"true"
+          {
+            "name": "data",
+            "required": "true",
+            "type":"object",
+            "in":"body",
+            "example":{
+              "email":"valid email addres",
+              "password":"user password"
             }
-         ],
+          }
+        ],
         "responses": {
           "200": {
             "description": "returns access tokens to be passsed in autorization header in other requests"
+          }
+        }
+      }
+    },
+    "/generate-otp": {
+      "post": {
+        "description": "generates one time password for forgoten passwords",
+        "produces": "application/json",
+        "consumes": "application/json",
+        "parameters": [
+          {
+            "name": "email",
+            "required": "true",
+            "in": "body",
+            "type":"object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success message"
           },
           "default": {
             "description": "unexpected error"
@@ -45,143 +67,137 @@
         }
       }
     },
-    "/forgot-password":{
-      "post":{
-        "description":"generates one time password for forgoten passwords",
-        "produces":"application/json",
-        "consumes":"application/json",
-        "parameters":[
+    "/forgot-password": {
+      "post": {
+        "description": "generates one time password for forgoten passwords",
+        "produces": "application/json",
+        "consumes": "application/json",
+        "parameters": [
           {
-            "name":"email",
-            "required":"true",
-            "in": "body"
-          },
-          {
-            "name":"otp",
-            "required":"true",
-            "in":"body"
-          },
-          {
-            "name":"newPassword",
-            "required":"true",
-            "in":"body"
+            "name": "data",
+            "required": "true",
+            "in": "body",
+            "type":"object",
+            "example":{
+              "otp":"one time password",
+              "newPassword":"new password"
+            }
           }
         ],
-        "responses":{
-          "200":{
-            "description":"success message"
-          },
-          "default":{
-            "description":"unexpected error"
+        "responses": {
+          "200": {
+            "description": "success message"
           }
         }
       }
     },
-    "/generate-otp":{
+    "/change-password": {
+      "put": {
+        "description": "generates one time password for forgoten passwords",
+        "produces": "application/json",
+        "consumes": "application/json",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "required": "true",
+            "in": "header",
+            "example":"Bearer\t access token goes hear"
+          },
+          {
+            "name": "data",
+            "required": "true",
+            "in": "body",
+            "type":"object",
+            "example":{
+              "newPassword":"0094",
+              "oldPassword":"0134"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success message"
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
+      }
+    },
+    "/admin/user": {
+      "post": {
+        "description": "generates one time password for forgoten passwords",
+        "produces": "application/json",
+        "consumes": "application/json",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "required": "true",
+            "in": "header",
+            "example":"Bearer\t access token goes hear"
+          },
+          {
+            "name": "data",
+            "required": "true",
+            "type": "object",
+            "in": "body",
+            "example": {
+              "firstName": "first name",
+              "secondName": "second name",
+              "lastName": "last name",
+              "email": "valid email addres",
+              "phoneNumber": "valid phone number",
+              "role": "can be 'financeManager', 'admin' or 'staff'"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "message that email is sent to your given email address"
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
+      },
       "get":{
-        "description":"generates one time password for forgoten passwords",
-        "produces":"application/json",
-        "consumes":"application/json",
-        "parameters":[
+        "description":"returns a list of users available in the system",
+        "produces": "application/json",
+        "consumes": "application/json",
+        "parameters": [
           {
-            "name":"email",
-            "required":"true",
-            "in": "body"
+            "name": "Authorization",
+            "required": "true",
+            "in": "header",
+            "example":"Bearer\t access token goes hear"
           }
-        ],
-        "responses":{
-          "200":{
-            "description":"success message"
-          },
-          "default":{
-            "description":"unexpected error"
+        ]
+      },
+      "delete":{
+        "description":"returns a list of users available in the system",
+        "produces": "application/json",
+        "consumes": "application/json",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "required": "true",
+            "in": "header",
+            "example":"Bearer\t access token goes hear"
           }
-        }
-      }
-    },
-    "/change-password":{
-      "post":{
-        "description":"generates one time password for forgoten passwords",
-        "produces":"application/json",
-        "consumes":"application/json",
-        "parameters":[
+        ]
+      },
+      "put":{
+        "description":"returns a list of users available in the system",
+        "produces": "application/json",
+        "consumes": "application/json",
+        "parameters": [
           {
-            "name":"email",
-            "required":"true",
-            "in": "body"
-          },
-          {
-            "name":"oldPassword",
-            "required":"true",
-            "in":"body"
-          },
-          {
-            "name":"newPassword",
-            "required":"true",
-            "in":"body"
+            "name": "Authorization",
+            "required": "true",
+            "in": "header",
+            "example":"Bearer\t access token goes hear"
           }
-        ],
-        "responses":{
-          "200":{
-            "description":"success message"
-          },
-          "default":{
-            "description":"unexpected error"
-          }
-        }
-      }
-    },
-    "/admin/add-user":{
-      "post":{
-        "description":"generates one time password for forgoten passwords",
-        "produces":"application/json",
-        "consumes":"application/json",
-        "parameters":[
-          {
-            "name":"Authorization",
-            "required":"true",
-            "in":"header"
-          },
-          {
-            "name":"firstName",
-            "required":"true",
-            "in": "body"
-          },
-          {
-            "name":"secondName",
-            "required":"true",
-            "in":"body"
-          },
-          {
-            "name":"lastName",
-            "required":"true",
-            "in":"body"
-          },
-          {
-            "name":"email",
-            "required":"true",
-            "in":"body"
-          },
-          {
-            "name":"phoneNumber",
-            "required":"true",
-            "in":"body",
-            "type":"integer"
-          },
-          {
-            "name":"role",
-            "required":"true",
-            "in":"body"
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"message that email is sent to your given email address"
-          },
-          "default":{
-            "description":"unexpected error"
-          }
-        }
+        ]
       }
     }
   }

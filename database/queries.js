@@ -48,7 +48,7 @@ const queries ={
     },
     changeUserRole: async (req,res) => {
         try {
-            let result = await user.findByIdAndUpdate(req.body.email,{role:req.body.newRole});
+            let result = await user.findOneAndUpdate({emailAddress:req.body.email},{role:req.body.newRole});
             if (!result) {
                 res.status(404).json({meaasage:"user with given id was not found"}).end();
                 return;
@@ -60,23 +60,11 @@ const queries ={
             return;
         }
     },
-    getAllUsers: async (req,res)=>{
+    getUsers: async (req,res)=>{
+        let filter =  {"emailAddress":req.query.filter}|| {};
+        console.log(filter);
         try {
-            let result = await user.find({});
-            res.json(result).end();
-            return;
-        } catch (error) {
-            res.json(error.message).end();
-            return;
-        }
-    },
-    getOneUser: async (req,res)=>{
-        try {
-            let result = await user.findById(req.body.email);
-            if (!result) {
-                res.status(404).json({meaasage:"user with given id was not found"}).end();
-                return;
-            }
+            let result = await user.find(filter);
             res.json(result).end();
             return;
         } catch (error) {
@@ -104,43 +92,53 @@ const queries ={
             res.json({message:"One Time Password is sent to your email Address, please use it to reset your password. The code expires in 10 minutes"}).end();
             return;
         } catch (error) {
-            res.json(error.meaasage);
+            res.json(error.message).end();
             return;
         }
     },
     forgotPassword:async (req,res)=>{
-        let userOtp = await otp.findOne({email:req.body.email});
-        if (!userOtp) {
-            res.json({message:"please generate OTP to change your password"}).end();
+        try {
+            let userOtp = await otp.findOne({email:req.body.email});
+            if (!userOtp) {
+                res.json({message:"please generate OTP to change your password"}).end();
+                return;
+            }
+            if (Date.now>userOtp.expireDate) {
+                await otp.findOneAndDelete({email:req.body.email});
+                res.json({message:"OTP expired please generate new OTP to reset your password "}).end();
+                return;
+            }
+            if (userOtp.value==req.body.otp) {
+                await user.findOneAndUpdate({emailAddress:req.body.email},{password:await encript(req.body.newPassword),passwordChanged:true});
+                await otp.findOneAndDelete({email:req.body.email});
+                res.json({message:"you have successful recoverd your password"}).end();
+                return;
+            }
+            res.json({message:"please provide correct OTP"}).end();
+            return;
+        } catch (error) {
+            res.json(error.message).end();
             return;
         }
-        if (Date.now>userOtp.expireDate) {
-            await otp.findOneAndDelete({email:req.body.email});
-            res.json({message:"OTP expired please generate new OTP to reset your password "}).end();
-            return;
-        }
-        if (userOtp.value==req.body.otp) {
-            await user.findOneAndUpdate({emailAddress:req.body.email},{password:await encript(req.body.newPassword),passwordChanged:true});
-            await otp.findOneAndDelete({email:req.body.email});
-            res.json({message:"you have successful recoverd your password"}).end();
-            return;
-        }
-        res.json({message:"please provide correct OTP"}).end();
-        return;
     },
     changePassword: async(req,res)=>{
-        let userDetails= await user.findOne({emailAddress:req.user.email});
-        if (!userDetails) {
-            res.json({message:"user with given email was not found"}).end();
+        try {
+            let userDetails= await user.findOne({emailAddress:req.user.email});
+            if (!userDetails) {
+                res.json({message:"user with given email was not found"}).end();
+                return;
+            }
+            if (await compare(req.body.oldPassword,userDetails.password)) {
+                await user.findOneAndUpdate({emailAddress:req.body.email},{password: await encript(req.body.newPassword),passwordChanged:true});
+                res.json({message:"password changed"}).end();
+                return;
+            }
+            res.json({message:"to change your password provide correct old password or try to recover your password if forgot"}).end();
+            return;
+        } catch (error) {
+            res.json(error.message).end();
             return;
         }
-        if (await compare(req.body.oldPassword,userDetails.password)) {
-            await user.findOneAndUpdate({emailAddress:req.body.email},{password: await encript(req.body.newPassword),passwordChanged:true});
-            res.json({message:"password changed"}).end();
-            return;
-        }
-        res.json({message:"to change your password provide correct old password or try to recover your password if forgot"}).end();
-        return;
     },
     createFundRequest: async (req,res)=>{
         try {
@@ -161,15 +159,15 @@ const queries ={
             }
             let newRequest = new request({
                 userId:req.user.userId,
-                project:projectId.toHexString(),
+                project:projectId._id.toHexString(),
                 amountRequired:requestData.amount,
                 description:requestData.description
             });
-            await newRequest.save();
-            res.json(newRequest).end();
+            let result = await newRequest.save();
+            res.json(result).end();
             return;
         } catch (error) {
-            res.json(error).end();
+            res.json(error.message).end();
             return;
         }
     },
@@ -187,7 +185,7 @@ const queries ={
             });
             res.json({message:"request edited successful"}).end();
         } catch (error) {
-            res.json(error).end();
+            res.json(error.message).end();
             return;
         }
     },
@@ -201,7 +199,7 @@ const queries ={
             res.json(result).end();
             return;
         } catch (error) {
-            res.json(error).end();
+            res.json(error.message).end();
             return;
         }
     },
@@ -221,7 +219,7 @@ const queries ={
             res.json({message:"request approved successful"}).end();
             return;
         } catch (error) {
-            res.json(error);
+            res.json(error.message).end();
             return;
         }
     },
@@ -240,9 +238,58 @@ const queries ={
             res.json({message:"request was rejected"});
             return;
         } catch (error) {
-            res.json(error).end();
+            res.json(error.message).end();
             return;
         }
+    },
+    addProjects: async(req,res)=>{
+        if (!req.body.projectName) {
+            res.json({message:"provide project name"});
+            return;
+        }
+        try {
+            let newProject = new project({
+                name:req.body.projectName
+            });
+            let result =await newProject.save();
+            res.json(result).end();
+            return;
+        } catch (error) {
+            res.json(error.message).end();
+            return;
+        }
+    },
+    addDepartments: async (req,res)=>{
+        if (!req.body.departmentName) {
+            res.json({message:"provide department name"});
+        }
+        try {
+            let newDepartment = new deparment({
+                departmentName:req.body.departmentName
+            });
+            let result = await newDepartment.save();
+            res.json(result).end();
+            return;
+        } catch (error) {
+            res.json(error.message).end();
+            return;
+        }
+    },
+    addExemption: async (req,res)=>{
+        try {
+            let newExemption= new exepmption({
+                requestId:req.body.requestId,
+                amount:req.body.amount,
+                reason:req.body.reason
+            });
+            let result = await newExemption.save();
+            res.json(result);
+            return;
+        } catch (error) {
+            res.json(error.message).end();
+            return;
+        }
+        
     }
 
         

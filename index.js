@@ -10,21 +10,19 @@ const { authenticate } = require('./authentication');
 const { signUser } = require('./signUser');
 const { queries } = require('./database/queries');
 const { roles } = require('./access');
-// Bugsnag.start({
-//     apiKey: '467947fb47a4c0f2bca2aeea86dc0793',
-//     plugins: [BugsnagPluginExpress]
-//   });
+Bugsnag.start({
+    apiKey: '467947fb47a4c0f2bca2aeea86dc0793',
+    plugins: [BugsnagPluginExpress]
+  });
 
 const app = express();
 
-// let bagsnagMiddleware = Bugsnag.getPlugin('express');
+let bagsnagMiddleware = Bugsnag.getPlugin('express');
 
 app.use(express.json());
 
-
-// app.use(bagsnagMiddleware.requestHandler);
-
-// app.use(bagsnagMiddleware.errorHandler);
+app.use(bagsnagMiddleware.requestHandler);
+app.use(bagsnagMiddleware.errorHandler);
 
 app.use(async(req,res,next)=>{
 
@@ -42,30 +40,47 @@ app.get('/',(req,res)=>{
 
 app.post('/api/login', signUser);
 
-app.get('/api/generate-otp',queries.createOtp);
+app.post('/api/generate-otp',queries.createOtp);
 
-app.post('/api/forgot-password',queries.forgotPassword);
+app.put('/api/forgot-password',queries.forgotPassword);
 
-app.post('/api/change-password',queries.changePassword);
 
 app.use(authenticate);
 app.use(logger);
+
+app.put('/api/change-password',queries.changePassword);
+// access control
 app.use('/api/admin',roles.allowAdmin);
-app.use('/api/finance-manager',roles.allowFinanceManager);
+app.use('/api/finance',roles.allowFinanceManager);
 
-app.post('/api/stuff/sendrequest',queries.createFundRequest);
+// admin roles
+app.get('/api/admin/users',queries.getUsers);
 
-app.get('/api/admin/stuffs',queries.getAllUsers);
+app.post('/api/admin/users',queries.createNewUser);
 
-app.get('/api/admin/stuffs/:id',queries.getOneUser);
+app.post('/api/admin/department',queries.addDepartments);
 
-app.post('/api/admin/add-user',queries.createNewUser);
+app.post('/api/admin/project',queries.addProjects);
 
-app.put('/api/admin/change-role',queries.changeUserRole);
+app.put('/api/admin/user/role',queries.changeUserRole);
 
-app.delete('/api/admin/remove-user',queries.removeUser);
+app.delete('/api/admin/user',queries.removeUser);
 
-app.get('*',(req,res)=>{
+// financeManager roles
+app.get('/api/finance/requests',queries.getRequests);
+
+app.put('/api/finance/request/:id/approve',queries.approveRequest);
+
+app.put('/api/finance/request/:id/reject',queries.rejectRequest);
+
+// stuff roles
+app.get('/api/user/request',(req,res,next)=>{req.body.filter=req.user.usserId;next()},queries.getRequests);
+
+app.post('/api/user/request',queries.createFundRequest);
+
+app.put('/api/user/request',queries.editRequest);
+
+app.use('*',(req,res)=>{
     res.status(404).json({Message:"content not found"});
     res.end();
 })
