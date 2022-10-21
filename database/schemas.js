@@ -201,7 +201,21 @@ const rejectSchema = new mongoose.Schema({
         required:[true,"please provide reason for rejection"]
     }
 });
-let reject = mongoose.model("rejects",rejectSchema)
+
+let logs = new mongoose.Schema({
+    user:String,
+    url:String,
+    role:String,
+    date:{
+        type:Date,
+        immutable:true,
+        default:()=> Date.now()
+    },
+    ipAddress:String
+})
+
+let log = mongoose.model('logs',logs);
+let reject = mongoose.model("rejects",rejectSchema);
 let deparment = mongoose.model('department',deparmentSchema);
 let otp=mongoose.model('otp',otpSchema);
 let project = mongoose.model('projects',projectsSchema);
@@ -212,4 +226,4 @@ let expenditure = mongoose.model('expenditures',expenditureSchema);
 let badget = mongoose.model('badget',badgetSchema);
 let user = mongoose.model('users',userSchema);
 let request=mongoose.model('fundRequests',fundRequestSchema);
-module.exports={projectBadget,user,request,badget,expenditure,exepmption,receipt,project,otp,reject,deparment};
+module.exports={projectBadget,user,request,badget,expenditure,exepmption,receipt,project,otp,reject,deparment,log};

@@ -10,6 +10,7 @@ const { authenticate } = require('./authentication');
 const { signUser } = require('./signUser');
 const { queries } = require('./database/queries');
 const { roles } = require('./access');
+const {user} = require('./database/schemas')
 Bugsnag.start({
     apiKey: '467947fb47a4c0f2bca2aeea86dc0793',
     plugins: [BugsnagPluginExpress]
@@ -33,6 +34,28 @@ app.use(async(req,res,next)=>{
         res.status(500).json({message:"internal server error"}).end();
     }
 })
+
+app.use(logger);
+try {
+    let checkAdmin = user.findOne({role:"admin"});
+    let adminData = new user({
+        firstName:process.env.FIRST_NAME,
+        secondName:process.env.SECON_DNAME,
+        lastName:process.env.LAST_NAME,
+        phoneNumber:process.env.PHONE_NUMBER,
+        passwordChanged:true,
+        password:process.env.PASSWORD,
+        emailAddress:process.env.EMAIL_ADDRESS,
+        role:"admin"
+    });        
+    if(!checkAdmin){
+        adminData.save();
+        console.log("admin created successful");
+    }
+} catch (error) {
+    throw error;
+}
+
 app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(Documentation));
 app.get('/',(req,res)=>{
     res.json({message:"welcome to our api services"});
@@ -46,6 +69,7 @@ app.put('/api/forgot-password',queries.forgotPassword);
 
 
 app.use(authenticate);
+
 app.use(logger);
 
 app.put('/api/change-password',queries.changePassword);
@@ -54,6 +78,8 @@ app.use('/api/admin',roles.allowAdmin);
 app.use('/api/finance',roles.allowFinanceManager);
 
 // admin roles
+app.get('/api/admin/logs',queries.viewLogs);
+
 app.get('/api/admin/users',queries.getUsers);
 
 app.post('/api/admin/users',queries.createNewUser);

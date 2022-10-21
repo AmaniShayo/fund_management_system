@@ -1,23 +1,24 @@
+const { log } = require('./database/schemas');
 let logger = async (req,res,next)=>{
-    let data={}
     try {
-        let date =()=>{return Date.now()};
         if (!req.user) {
-            data.user="unknown user";
-            data.url=req.url;
-            data.date=date();
-            data.ipAddress=req.ip;
-            console.log(data);
+            let newLog = new log({
+                user:"unknown user",
+                ipAddress:req.ip,
+                url:req.url
+            });
+            await newLog.save();
             next();
             return;
         }
-        data.user=req.user.userId;
-        data.role=req.user.role;
-        data.date=date();
-        data.url=req.url;
-        data.ipAddress=req.ip;
-        console.log(data);
-        next()
+        let newLog = new log({
+            user:req.user.userId,
+            role:req.user.role,
+            ipAddress:req.ip,
+            url:req.url
+        });
+        await newLog.save();
+        next();
     } catch (error) {
         console.log(error);
     }

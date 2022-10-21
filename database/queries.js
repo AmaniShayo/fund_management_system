@@ -1,4 +1,4 @@
-const {project,user,request,badget,expenditure,reject,deparment,exepmption,receipt,projectBadget,otp} = require('./schemas')
+const {project,user,request,badget,expenditure,reject,deparment,exepmption,receipt,projectBadget,otp,log} = require('./schemas')
 const { inviteByEmail,otpEmail } = require('../mailer');
 const { randomPassword,encript,otpGenarator} = require('../passwords');
 const { compare } = require('bcryptjs');
@@ -290,6 +290,20 @@ const queries ={
             return;
         }
         
+    },
+    viewLogs: async (req,res)=>{
+        try {
+            let result = await log.find({});
+            if (!result) {
+                res.json({message:"no logs availble"}).end();
+                return;
+            }
+            res.json(result).end();
+            return;
+        } catch (error) {
+            res.json(error);
+            return;
+        }
     }
 
         
