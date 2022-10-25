@@ -116,6 +116,7 @@ const exemptionSchema = new mongoose.Schema({
 const badgetSchema = new mongoose.Schema({
     month:{
         type:String,
+        required:true,
         immutable:true
     },
     badgetAmount:{
@@ -140,6 +141,10 @@ const projectsSchema= new mongoose.Schema({
 
 const projectBadgetSchema= new mongoose.Schema({
     project:{
+        type:String,
+        required:true
+    },
+    badget:{
         type:String,
         required:true
     },

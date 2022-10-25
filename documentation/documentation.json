@@ -124,7 +124,7 @@
         }
       }
     },
-    "/admin/user": {
+    "/admin/users": {
       "post": {
         "description": "generates one time password for forgoten passwords",
         "produces": "application/json",
@@ -170,8 +170,21 @@
             "required": "true",
             "in": "header",
             "example":"Bearer\t access token goes hear"
+          },
+          {
+            "name": "filter",
+            "in": "url",
+            "example":"filter=shedyshayo@gmail.com"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "message that email is sent to your given email address"
+          },
+          "default": {
+            "description": "unexpected error"
+          }
+        }
       },
       "delete":{
         "description":"returns a list of users available in the system",
