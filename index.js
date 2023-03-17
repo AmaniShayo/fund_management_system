@@ -1,15 +1,14 @@
-require('dotenv').config();
 const express=require('express');
-const {logger} = require("./logger");
+const { logger } = require("./middlewares/logger");
 const Bugsnag = require('@bugsnag/js');
 const BugsnagPluginExpress = require('@bugsnag/plugin-express');
-const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
 const Documentation = require('./documentation/documentation.json');
-const { authenticate } = require('./authentication');
-const { signUser } = require('./signUser');
+const { authenticate } = require('./middlewares/authentication');
+const { connect } = require('./middlewares/dbconnect');
+const { login } = require('./login');
 const { queries } = require('./database/queries');
-const {user} = require('./database/schemas')
+
 Bugsnag.start({
     apiKey: '467947fb47a4c0f2bca2aeea86dc0793',
     plugins: [BugsnagPluginExpress]
@@ -24,65 +23,39 @@ app.use(express.json());
 app.use(bagsnagMiddleware.requestHandler);
 app.use(bagsnagMiddleware.errorHandler);
 
-app.use(async(req,res,next)=>{
-
-    try {
-        await mongoose.connect('mongodb://localhost:27017/test-collection');
-        next();
-    } catch (error) {
-        res.status(500).json({message:"internal server error"}).end();
-    }
-})
+app.use(connect);
 
 app.use(logger);
-try {
-    let checkAdmin = user.findOne({role:"admin"});
-    let adminData = new user({
-        firstName:process.env.FIRST_NAME,
-        secondName:process.env.SECON_DNAME,
-        lastName:process.env.LAST_NAME,
-        phoneNumber:process.env.PHONE_NUMBER,
-        passwordChanged:true,
-        password:process.env.PASSWORD,
-        emailAddress:process.env.EMAIL_ADDRESS,
-        role:"admin"
-    });        
-    if(!checkAdmin){
-        adminData.save();
-        console.log("admin created successful");
-    }
-} catch (error) {
-    throw error;
-}
+
+
 app.get('/',(req,res)=>{
     res.json({message:"welcome to our api services"});
 });
 
 app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(Documentation));
 
-app.post('/api/login', signUser);
+app.post('/api/login', login);
 
-app.post('/api/generate-otp',queries.createOtp);
+app.post('/api/generate-otp', queries.createOtp);
 
-app.put('/api/forgot-password',queries.forgotPassword);
+app.put('/api/forgot-password', queries.forgotPassword);
 
-// app.use(authenticate);
 
-app.put('/api/change-password',authenticate,queries.changePassword);
+app.put('/api/change-password', authenticate, queries.changePassword);
 
-app.get('/api/logs',authenticate,queries.viewLogs);
+app.get('/api/logs', authenticate, queries.viewLogs);
 
-app.get('/api/users',authenticate,queries.getUsers);
+app.get('/api/users', authenticate, queries.getUsers);
 
-app.post('/api/users',authenticate,queries.createNewUser);
+app.post('/api/users', authenticate, queries.createNewUser);
 
-app.put('/api/users',authenticate,queries.changeUserRole);
+app.put('/api/users', authenticate, queries.changeUserRole);
 
-app.delete('/api/users',authenticate,queries.removeUser);
+app.delete('/api/users', authenticate, queries.removeUser);
 
-app.post('/api/department',authenticate,queries.addDepartments);
+app.post('/api/department', authenticate, queries.addDepartments);
 
-app.post('/api/project',authenticate,queries.addProjects);
+app.post('/api/project', authenticate, queries.addProjects);
 
 app.get('/api/request',authenticate,(req,res,next)=>{
     if (req.user.role != 'financeManager') {
@@ -92,23 +65,23 @@ app.get('/api/request',authenticate,(req,res,next)=>{
     next();
 },queries.getRequests);
 
-app.put('/api/request/:id/approve',authenticate,queries.approveRequest);
+app.put('/api/request/:id/approve', authenticate, queries.approveRequest);
 
-app.put('/api/request/:id/reject',authenticate,queries.rejectRequest);
+app.put('/api/request/:id/reject', authenticate, queries.rejectRequest);
 
-app.post('/api/request',authenticate,queries.createFundRequest);
+app.post('/api/request', authenticate, queries.createFundRequest);
 
-app.put('/api/request',authenticate,queries.editRequest);
+app.put('/api/request', authenticate, queries.editRequest);
 
-app.post('/api/badget',authenticate,queries.createBadget);
+app.post('/api/badget', authenticate, queries.createBadget);
 
 app.use('*',(req,res)=>{
-    res.status(404).json({Message:"content not found"});
+    res.status(404).json({ Message: "content not found" });
     res.end();
 })
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 
-app.listen(port,()=>{
+app.listen(port, () => {
     console.log('listening on http://localhost/');
-})
+});

@@ -19,15 +19,15 @@ function randomPassword(){
     let password=[];
     let i = 0;
     while(i<4){
-        password.push(Math.floor(Math.random()*10));
+        password.push(Math.floor(Math.random() * 10));
         i++;
     }
     return password.join('');
 }
-randomPassword()
+
 function otpGenarator(){
     let date = new Date();
-    let expireDate = date.setMinutes(date.getMinutes()+10)
+    let expireDate = date.setMinutes(date.getMinutes() + 10);
     let otp = randomPassword();
     let otpObject={
         value:otp,
@@ -36,5 +36,4 @@ function otpGenarator(){
     return otpObject;
 }
 
-
-module.exports={encript,compare,randomPassword,otpGenarator};
+module.exports = { encript, compare, randomPassword, otpGenarator };

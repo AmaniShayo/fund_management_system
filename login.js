@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const {user}=require('./database/schemas');
 const { compare } = require('./passwords');
-async function signUser(req,res){
+ const  login = async (req,res)=>{
     try {
         let userDetails=await user.findOne({emailAddress:req.body.email});
         if (!userDetails) {
@@ -26,4 +26,4 @@ async function signUser(req,res){
     }
 }
 
-module.exports={signUser}
+module.exports = { login };

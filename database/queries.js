@@ -1,6 +1,6 @@
 const {project,user,request,expenditure,reject,deparment,exepmption,receipt,projectBadget,otp,log,badget} = require('./schemas')
 const { inviteByEmail,otpEmail } = require('../mailer');
-const { randomPassword,encript,otpGenarator} = require('../passwords');
+const { randomPassword, encript, otpGenarator } = require('../passwords');
 const { compare } = require('bcryptjs');
 const xlsx = require('xlsx');
 const formidable = require('formidable');
