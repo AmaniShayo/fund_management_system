@@ -19,3 +19,7 @@ a tool for testing APIs
 
 # .env.example
 the file contain an example of environment variable and names used in the program. use it to create a .env file
+
+# How to use
+
+if the software is to be run for the first time pass `build` as third argument to create admin user

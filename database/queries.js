@@ -1,5 +1,5 @@
-const {project,user,request,expenditure,reject,deparment,exepmption,receipt,projectBadget,otp,log,badget} = require('./schemas')
-const { inviteByEmail,otpEmail } = require('../mailer');
+const { project, user, request, expenditure, reject, deparment, exepmption, receipt, projectBadget, otp, log, badget } = require('./schemas');
+const { inviteByEmail,otpEmail } = require('../email/mailer');
 const { randomPassword, encript, otpGenarator } = require('../passwords');
 const { compare } = require('bcryptjs');
 const xlsx = require('xlsx');
@@ -35,7 +35,7 @@ const queries ={
                 return;
             }
         }
-        res.status(401).json({message:"unauthorised"}).end();
+        res.status(401).json({ message: "unauthorised" }).end();
         return;
     },
     removeUser: async (req,res) => {
