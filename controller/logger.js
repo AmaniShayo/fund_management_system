@@ -1,5 +1,6 @@
-const { log } = require('../database/schemas');
-let logger = async (req,res,next)=>{
+const { log } = require('../model/schemas');
+
+exports.logger = async (req,res,next)=>{
     try {
         if (!req.user) {
             next();
@@ -14,8 +15,7 @@ let logger = async (req,res,next)=>{
             next();
         }
     } catch (error) {
-        res.json({ message: error.message });
+        console.log(error);
+        next();
     }
 }
-
-module.exports.logger = logger;

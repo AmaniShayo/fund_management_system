@@ -1,6 +1,7 @@
-require('dotenv').config();
+require('dotenv').config({path:'../.env'});
 const nodemailer = require('nodemailer');
-const sendEmail = async (from_, to_, subject_, message) => {
+
+exports.mailer = async (from_, to_, subject_, message) => {
     try {
 
         const client = await nodemailer.createTransport({
@@ -18,21 +19,11 @@ const sendEmail = async (from_, to_, subject_, message) => {
                 subject: subject_,
                 text: message
             }
-        )
+        );
+        
     } catch (error) {
         console.log(error);
     }
-}
-
-const inviteByEmail = (to, password, name) => {
-    let mail = {
-        from: "Admin",
-        to: to,
-        subject: "login credentials",
-        text: `welcome ${name} please use your email ${to} and password ${password} to change your password then login`,
-    }
-
-    sendEmail(mail.from, mail.to, mail.text);
 }
 
 const otpEmail = (to, otp) => {
@@ -44,4 +35,3 @@ const otpEmail = (to, otp) => {
     }
     sendEmail(otpMailObject.from, otpMailObject.to, otpMailObject.subject, otpMailObject.text);
 }
-module.exports = { inviteByEmail, otpEmail };

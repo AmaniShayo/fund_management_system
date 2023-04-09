@@ -259,17 +259,16 @@ let logs = new mongoose.Schema({
     ipAddress: String
 });
 
-let role = mongoose.model('roles', roleSchema);
-let log = mongoose.model('logs', logs);
-let reject = mongoose.model("rejects", rejectSchema);
-let deparment = mongoose.model("departments", deparmentSchema);
-let otp = mongoose.model('otps', otpSchema);
-let project = mongoose.model('projects', projectSchema);
-let projectBadget = mongoose.model('projectBadgets', projectBadgetSchema);
-let receipt = mongoose.model('recepts', receiptSchema);
-let exepmption = mongoose.model('exemptions', exemptionSchema);
-let expenditure = mongoose.model('expenditures', expenditureSchema);
-let badget = mongoose.model('badgets', badgetSchema);
-let user = mongoose.model('users', userSchema);
-let request = mongoose.model('fundRequests', fundRequestSchema);
-module.exports = { projectBadget, user, request, badget, expenditure, exepmption, receipt, project, otp, reject, deparment, log, role };
+exports.role = mongoose.model('roles', roleSchema);
+exports.log = mongoose.model('logs', logs);
+exports.reject = mongoose.model("rejects", rejectSchema);
+exports.deparment = mongoose.model("departments", deparmentSchema);
+exports.otp = mongoose.model('otps', otpSchema);
+exports.project = mongoose.model('projects', projectSchema);
+exports.projectBadget = mongoose.model('projectBadgets', projectBadgetSchema);
+exports.receipt = mongoose.model('recepts', receiptSchema);
+exports.exepmption = mongoose.model('exemptions', exemptionSchema);
+exports.expenditure = mongoose.model('expenditures', expenditureSchema);
+exports.badget = mongoose.model('badgets', badgetSchema);
+exports.user = mongoose.model('users', userSchema);
+exports.request = mongoose.model('fundRequests', fundRequestSchema);

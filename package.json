@@ -1,10 +1,11 @@
 {
   "name": "ipf_fund_request_system",
   "version": "1.0.0",
-  "description": "a system for requesting funds from finance manager",
-  "main": "index.js",
+  "description": "fund mannagement system for companies and organisations",
+  "main": "app.js",
   "scripts": {
-    "test": "node index.js"
+    "build":"node build.js",
+    "dev": "nodemon app.js"
   },
   "dependencies": {
     "@bugsnag/js": "^7.17.0",
