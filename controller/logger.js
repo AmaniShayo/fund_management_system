@@ -2,9 +2,6 @@ const { log } = require('../model/schemas');
 
 exports.logger = async (req,res,next)=>{
     try {
-        if (!req.user) {
-            next();
-        } else {
             let newLog = new log({
                 user:req.user.userId,
                 role:req.user.role,
@@ -13,9 +10,9 @@ exports.logger = async (req,res,next)=>{
             });
             await newLog.save();
             next();
-        }
     } catch (error) {
         console.log(error);
-        next();
+        res.status(500).json({ message: "an error occured" });
+        return;
     }
 }
